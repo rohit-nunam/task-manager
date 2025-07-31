@@ -35,4 +35,11 @@ public class UserController {
         UserDto user = userService.getUserById(id);
         return ResponseEntity.ok(user);
     }
+
+    @DeleteMapping("/tasks/{id}")
+    public ResponseEntity<Void> deleteTask(@PathVariable UUID id) {
+        userService.softDeleteUser(id);
+        return ResponseEntity.noContent().build();
+    }
+
 }

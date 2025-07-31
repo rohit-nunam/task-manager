@@ -1,5 +1,6 @@
 package com.rohit.task_manager.service;
 
+import com.rohit.task_manager.domain.Task;
 import com.rohit.task_manager.domain.User;
 import com.rohit.task_manager.dto.input.UserCreateRequest;
 import com.rohit.task_manager.dto.output.UserDto;
@@ -9,6 +10,7 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.Instant;
 import java.util.UUID;
 
 @Service
@@ -56,5 +58,11 @@ public class UserService {
                 .email(user.getEmail())
                 .timeZone(user.getTimeZone())
                 .build();
+    }
+
+    public void softDeleteUser(UUID id) {
+        User user = userRepository.findById(id).orElseThrow();
+        user.setDeleted(true);
+        userRepository.save(user);
     }
 }
