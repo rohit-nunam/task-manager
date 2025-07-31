@@ -12,8 +12,11 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 public class StoryService {
@@ -57,7 +60,24 @@ public class StoryService {
     }
 
     public List<Story> getActiveStories(String timeZone) {
-        return storyRepository.findActiveStories();
+        List<Story> activeStories = storyRepository.findActiveStories();
+
+        return activeStories.stream()
+                .peek(story -> {
+                    // Convert expectedStartDateTime from UTC to given timeZone
+                    if (story.getExpectedStartDateTime() != null) {
+                        ZonedDateTime converted = ZonedDateTime.ofInstant(
+                                story.getExpectedStartDateTime(),
+                                ZoneId.of("UTC")
+                        ).withZoneSameInstant(ZoneId.of(timeZone));
+
+                        story.setExpectedStartDateTime(converted.toInstant()); // or set a new ZonedDateTime field if needed
+                    }
+
+                    // Do the same for expectedEndDateTime or other time fields if needed
+                })
+                .collect(Collectors.toList());
     }
+
 }
 
