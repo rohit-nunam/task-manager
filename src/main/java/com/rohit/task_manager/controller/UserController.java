@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/users")
+@RequestMapping("/api/v1")
 @Log4j2
 public class UserController {
 
@@ -24,7 +24,7 @@ public class UserController {
         this.userService = userService;
     }
 
-    @PostMapping
+    @PostMapping("/users")
     public ResponseEntity<UserDto> createUser(@Valid @RequestBody UserCreateRequest request) {
         UserDto createdUser = userService.createUser(request);
         return ResponseEntity.ok(createdUser);
@@ -36,8 +36,8 @@ public class UserController {
         return ResponseEntity.ok(user);
     }
 
-    @DeleteMapping("/tasks/{id}")
-    public ResponseEntity<Void> deleteTask(@PathVariable UUID id) {
+    @DeleteMapping("/users/{id}")
+    public ResponseEntity<Void> deleteUser(@PathVariable UUID id) {
         userService.softDeleteUser(id);
         return ResponseEntity.noContent().build();
     }
