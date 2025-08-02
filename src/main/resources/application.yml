@@ -9,6 +9,13 @@ spring:
   redis:
     host: localhost
     port: 6379
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
+  logging:
+    level:
+      org.hibernate.SQL: debug
+      org.hibernate.type.descriptor.sql.BasicBinder: trace
   jpa:
     hibernate:
       ddl-auto: update
@@ -21,8 +28,3 @@ spring:
   jackson:
     serialization:
       WRITE_DATES_AS_TIMESTAMPS: false
-
-logging:
-  level:
-    org.hibernate.SQL: debug
-    org.hibernate.type.descriptor.sql.BasicBinder: trace
