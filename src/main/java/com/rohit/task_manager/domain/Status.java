@@ -19,4 +19,13 @@ public class Status {
     private String name;
 
     private String description;
+
+    public Status(String name) {
+        this.name = name;
+    }
+
+    public Status(Long id, String name) {
+        this.id = id;
+        this.name = name;
+    }
 }

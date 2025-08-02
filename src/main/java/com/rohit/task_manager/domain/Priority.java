@@ -20,4 +20,12 @@ public class Priority {
 
     private String description;
 
+    public Priority(String name) {
+        this.name = name;
+    }
+
+    public Priority(Long id, String name) {
+        this.id = id;
+        this.name = name;
+    }
 }

@@ -32,4 +32,9 @@ public class User {
 
     @Column(nullable = false)
     private boolean isDeleted = false;
+
+    public User(UUID id) {
+        this.id = id;
+    }
+
 }

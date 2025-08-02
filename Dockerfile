@@ -5,7 +5,7 @@ FROM eclipse-temurin:17-jdk-alpine
 WORKDIR /app
 
 # Copy the jar file
-COPY build/libs/task-manager-*.jar app.jar
+COPY target/task-manager-*.jar app.jar
 
 # Expose the port
 EXPOSE 8080
