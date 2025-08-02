@@ -25,20 +25,25 @@ public class UserController {
 
     @PostMapping("/users")
     public ResponseEntity<UserDto> createUser(@Valid @RequestBody UserCreateRequest request) {
+        log.info("Received request to create user: {}", request.getEmail());
         UserDto createdUser = userService.createUser(request);
+        log.info("User created successfully with ID: {}", createdUser.getId());
         return ResponseEntity.ok(createdUser);
     }
 
     @GetMapping("/users/{id}")
     public ResponseEntity<UserDto> getUser(@PathVariable UUID id) {
+        log.info("Fetching user with ID: {}", id);
         UserDto user = userService.getUserById(id);
+        log.info("Fetched user: {}", user.getEmail());
         return ResponseEntity.ok(user);
     }
 
     @DeleteMapping("/users/{id}")
     public ResponseEntity<Void> deleteUser(@PathVariable UUID id) {
+        log.info("Deleting (soft) user with ID: {}", id);
         userService.softDeleteUser(id);
+        log.info("User soft deleted: {}", id);
         return ResponseEntity.noContent().build();
     }
-
 }

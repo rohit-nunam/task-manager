@@ -6,7 +6,9 @@ import com.rohit.task_manager.domain.Story;
 import com.rohit.task_manager.domain.User;
 import com.rohit.task_manager.dto.input.StoryRequestDto;
 import com.rohit.task_manager.respository.StoryRepository;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -19,10 +21,10 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
+@Log4j2
 public class StoryService {
 
     private final TaskService taskService;
-
     private final StoryRepository storyRepository;
 
     @Autowired
@@ -32,8 +34,10 @@ public class StoryService {
     }
 
     public Story createStory(StoryRequestDto dto) {
+        log.info("Creating story with title: {}", dto.getTitle());
 
         taskService.validateInProgressTimestamps(dto.getStatusId(), dto.getExpectedStartDateTime(), dto.getExpectedEndDateTime());
+        log.debug("Validated timestamps for statusId: {}", dto.getStatusId());
 
         User user = taskService.getUser(dto.getAssignedToId());
         Status status = taskService.getStatus(dto.getStatusId());
@@ -52,14 +56,19 @@ public class StoryService {
                 .isDeleted(false)
                 .build();
 
-        return storyRepository.save(story);
+        Story saved = storyRepository.save(story);
+        log.info("Story created with ID: {}", saved.getId());
+        return saved;
     }
 
     public Page<Story> getStoriesByUser(UUID userId, Pageable pageable) {
+        log.info("Fetching stories for userId: {}", userId);
         return storyRepository.findByAssignedToIdAndIsDeletedFalse(userId, pageable);
     }
 
+    @Cacheable(value = "activeStoriesCache", key = "#timeZone")
     public List<Story> getActiveStories(String timeZone) {
+        log.info("Fetching active stories for timezone: {}", timeZone);
         List<Story> activeStories = storyRepository.findActiveStories();
 
         return activeStories.stream()
@@ -74,6 +83,4 @@ public class StoryService {
                 })
                 .collect(Collectors.toList());
     }
-
 }
-

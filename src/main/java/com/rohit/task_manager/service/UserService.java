@@ -24,9 +24,13 @@ public class UserService {
     }
 
     public UserDto createUser(UserCreateRequest request) {
+        log.info("Creating user with email: {}", request.getEmail());
+
         userRepository.findByEmail(request.getEmail()).ifPresent(existing -> {
+            log.warn("User with email {} already exists", request.getEmail());
             throw new BadRequestException("Email already exists");
         });
+
         User user = User.builder()
                 .firstName(request.getFirstName())
                 .middleName(request.getMiddleName())
@@ -37,13 +41,34 @@ public class UserService {
                 .build();
 
         User saved = userRepository.save(user);
+        log.info("User created successfully with ID: {}", saved.getId());
         return mapToDto(saved);
     }
 
     public UserDto getUserById(UUID id) {
+        log.info("Fetching user with ID: {}", id);
+
         User user = userRepository.getUserById(id)
-                .orElseThrow(() -> new EntityNotFoundException("User not found or deleted!"));
+                .orElseThrow(() -> {
+                    log.error("User with ID {} not found or deleted", id);
+                    return new EntityNotFoundException("User not found or deleted!");
+                });
+
+        log.info("User with ID {} fetched successfully", id);
         return mapToDto(user);
+    }
+
+    public void softDeleteUser(UUID id) {
+        log.info("Soft deleting user with ID: {}", id);
+
+        User user = userRepository.findById(id).orElseThrow(() -> {
+            log.error("User with ID {} not found", id);
+            return new EntityNotFoundException("User not found!");
+        });
+
+        user.setDeleted(true);
+        userRepository.save(user);
+        log.info("User with ID {} marked as deleted", id);
     }
 
     private UserDto mapToDto(User user) {
@@ -55,11 +80,5 @@ public class UserService {
                 .email(user.getEmail())
                 .timeZone(user.getTimeZone())
                 .build();
-    }
-
-    public void softDeleteUser(UUID id) {
-        User user = userRepository.findById(id).orElseThrow();
-        user.setDeleted(true);
-        userRepository.save(user);
     }
 }
