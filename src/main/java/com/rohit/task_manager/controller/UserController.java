@@ -4,7 +4,6 @@ import com.rohit.task_manager.dto.input.UserCreateRequest;
 import com.rohit.task_manager.dto.output.UserDto;
 import com.rohit.task_manager.service.UserService;
 import jakarta.validation.Valid;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -30,7 +29,7 @@ public class UserController {
         return ResponseEntity.ok(createdUser);
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/users/{id}")
     public ResponseEntity<UserDto> getUser(@PathVariable UUID id) {
         UserDto user = userService.getUserById(id);
         return ResponseEntity.ok(user);

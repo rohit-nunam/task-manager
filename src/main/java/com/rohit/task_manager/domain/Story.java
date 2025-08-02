@@ -1,5 +1,6 @@
 package com.rohit.task_manager.domain;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -38,6 +39,7 @@ public class Story {
     private Instant expectedEndDateTime;
 
     @OneToMany(mappedBy = "story", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
     private List<Task> childTasks;
 
     @ManyToOne

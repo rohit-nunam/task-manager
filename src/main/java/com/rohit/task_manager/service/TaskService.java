@@ -120,10 +120,11 @@ public class TaskService {
     }
 
     public Page<Task> searchTasks(UUID userId, String firstName, Instant expectedEnd, String status, Pageable pageable) {
+        System.out.println("inside service ++++");
         return taskRepository.searchTasks(userId, firstName, expectedEnd, status, pageable);
     }
 
-    public Page<Task> filterTasks(UUID userId, List<String> status, List<String> priority, Pageable pageable) {
+    public Page<Task> filterTasks(UUID userId, String status, String priority, Pageable pageable) {
         return taskRepository.filterTasks(userId, status, priority, pageable);
     }
 

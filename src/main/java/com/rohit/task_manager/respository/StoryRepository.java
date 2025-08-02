@@ -15,8 +15,7 @@ public interface StoryRepository extends JpaRepository<Story, Long> {
 
     Page<Story> findByAssignedToIdAndIsDeletedFalse(UUID userId, Pageable pageable);
 
-    @Query("SELECT s FROM Story s WHERE s.status.name = 'IN_PROGRESS' AND s.status.name <> 'DONE' " +
-            "AND s.priority.name = 'LOW' AND s.isDeleted = false")
+    @Query("SELECT s FROM Story s WHERE s.status.name = 'IN_PROGRESS' AND s.priority.name = 'LOW' AND s.isDeleted = false")
     List<Story> findActiveStories();
 
 }

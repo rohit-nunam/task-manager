@@ -3,6 +3,7 @@ package com.rohit.task_manager.service;
 import com.rohit.task_manager.domain.User;
 import com.rohit.task_manager.dto.input.UserCreateRequest;
 import com.rohit.task_manager.dto.output.UserDto;
+import com.rohit.task_manager.exception.BadRequestException;
 import com.rohit.task_manager.respository.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.extern.log4j.Log4j2;
@@ -24,9 +25,8 @@ public class UserService {
 
     public UserDto createUser(UserCreateRequest request) {
         userRepository.findByEmail(request.getEmail()).ifPresent(existing -> {
-            throw new IllegalArgumentException("Email already exists");
+            throw new BadRequestException("Email already exists");
         });
-
         User user = User.builder()
                 .firstName(request.getFirstName())
                 .middleName(request.getMiddleName())
@@ -41,9 +41,8 @@ public class UserService {
     }
 
     public UserDto getUserById(UUID id) {
-        User user = userRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("User not found"));
-
+        User user = userRepository.getUserById(id)
+                .orElseThrow(() -> new EntityNotFoundException("User not found or deleted!"));
         return mapToDto(user);
     }
 

@@ -64,17 +64,13 @@ public class StoryService {
 
         return activeStories.stream()
                 .peek(story -> {
-                    // Convert expectedStartDateTime from UTC to given timeZone
                     if (story.getExpectedStartDateTime() != null) {
                         ZonedDateTime converted = ZonedDateTime.ofInstant(
                                 story.getExpectedStartDateTime(),
                                 ZoneId.of("UTC")
                         ).withZoneSameInstant(ZoneId.of(timeZone));
-
-                        story.setExpectedStartDateTime(converted.toInstant()); // or set a new ZonedDateTime field if needed
+                        story.setExpectedStartDateTime(converted.toInstant());
                     }
-
-                    // Do the same for expectedEndDateTime or other time fields if needed
                 })
                 .collect(Collectors.toList());
     }

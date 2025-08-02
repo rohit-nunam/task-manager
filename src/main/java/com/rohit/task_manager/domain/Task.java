@@ -1,5 +1,6 @@
 package com.rohit.task_manager.domain;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -36,6 +37,7 @@ public class Task {
 
     @ManyToOne
     @JoinColumn(name = "story_id")
+    @JsonBackReference
     private Story story;
 
     @ManyToOne
