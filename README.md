@@ -17,13 +17,13 @@ A Spring Boot application that provides APIs for managing tasks and stories, wit
 
 ## Features
 
-- RESTful APIs for task and story management
+- **RESTful APIs for task and story management**
 
 ![img_1.png](img_1.png)
-- Swagger UI
+- **Swagger UI**
 
 ![img.png](img.png)
-- Health and info endpoints exposed via `/actuator`
+- **Health and info endpoints exposed via `/actuator`**
 
 ![img_2.png](img_2.png)
 
