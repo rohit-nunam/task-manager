@@ -4,6 +4,8 @@ import com.rohit.task_manager.domain.Task;
 import com.rohit.task_manager.dto.input.TaskRequestDto;
 import com.rohit.task_manager.dto.input.UpdateTaskStatusRequest;
 import com.rohit.task_manager.service.TaskService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.data.domain.Page;
@@ -19,10 +21,15 @@ import java.util.UUID;
 @RequiredArgsConstructor
 @RequestMapping("/api/v1")
 @Log4j2
+@Tag(name = "Task Management", description = "APIs for managing tasks")
 public class TaskController {
 
     private final TaskService taskService;
 
+    @Operation(
+            summary = "Create a new task",
+            description = "Creates a new task using the provided task details."
+    )
     @PostMapping("/tasks")
     public ResponseEntity<Task> createTask(@RequestBody TaskRequestDto dto) {
         log.info("Received request to create task: {}", dto);
@@ -31,6 +38,10 @@ public class TaskController {
         return ResponseEntity.status(HttpStatus.CREATED).body(createdTask);
     }
 
+    @Operation(
+            summary = "Update task status",
+            description = "Updates the status of an existing task using the task ID and new status."
+    )
     @PutMapping("/tasks/{id}/status")
     public ResponseEntity<Task> updateTaskStatus(
             @PathVariable Long id,
@@ -41,6 +52,10 @@ public class TaskController {
         return ResponseEntity.ok(updatedTask);
     }
 
+    @Operation(
+            summary = "Search tasks by filters",
+            description = "Search for tasks based on optional user ID, user first name, expected end date, and status."
+    )
     @GetMapping("/tasks/search")
     public ResponseEntity<Page<Task>> searchTasks(
             @RequestParam(required = false) UUID userId,
@@ -55,6 +70,10 @@ public class TaskController {
         return ResponseEntity.ok(result);
     }
 
+    @Operation(
+            summary = "Filter tasks",
+            description = "Filter tasks using optional user ID, status, and priority."
+    )
     @GetMapping("/tasks/filter")
     public ResponseEntity<Page<Task>> filterTasks(
             @RequestParam(required = false) UUID userId,
@@ -67,6 +86,10 @@ public class TaskController {
         return ResponseEntity.ok(result);
     }
 
+    @Operation(
+            summary = "Soft delete a task",
+            description = "Marks a task as deleted (soft delete) based on its ID."
+    )
     @DeleteMapping("/tasks/{id}")
     public ResponseEntity<Void> deleteTask(@PathVariable Long id) {
         log.info("Received request to delete task with ID={}", id);

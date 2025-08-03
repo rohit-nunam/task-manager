@@ -3,6 +3,8 @@ package com.rohit.task_manager.controller;
 import com.rohit.task_manager.domain.Story;
 import com.rohit.task_manager.dto.input.StoryRequestDto;
 import com.rohit.task_manager.service.StoryService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +22,7 @@ import java.util.UUID;
 @RestController
 @RequestMapping("/api/v1")
 @Log4j2
+@Tag(name = "Story Management", description = "APIs for managing stories")
 public class StoryController {
 
     private final StoryService storyService;
@@ -29,6 +32,10 @@ public class StoryController {
         this.storyService = storyService;
     }
 
+    @Operation(
+            summary = "Create a new story",
+            description = "Creates a new story for a specific user. The story will be associated with the user specified in the request payload."
+    )
     @PostMapping("/stories")
     public ResponseEntity<Story> createStory(@RequestBody @Valid StoryRequestDto dto) {
         log.info("Creating a new story for user!");
@@ -37,6 +44,10 @@ public class StoryController {
         return ResponseEntity.status(HttpStatus.CREATED).body(story);
     }
 
+    @Operation(
+            summary = "Fetch stories for a user",
+            description = "Retrieves paginated list of stories created by a given user. Results are sorted by creation timestamp in descending order by default."
+    )
     @GetMapping("/stories/{userId}")
     public ResponseEntity<Page<Story>> getStoriesForUser(
             @PathVariable UUID userId,
@@ -47,6 +58,10 @@ public class StoryController {
         return ResponseEntity.ok(stories);
     }
 
+    @Operation(
+            summary = "Get active stories",
+            description = "Fetches all currently active stories based on the provided time zone. Active stories are those within their display duration window."
+    )
     @GetMapping("/stories/active")
     public ResponseEntity<List<Story>> getActiveStories(@RequestParam String timeZone) {
         log.info("Fetching active stories for timezone: {}", timeZone);
