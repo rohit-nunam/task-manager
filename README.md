@@ -69,6 +69,10 @@ Actuator health check:
 
 ``` http://localhost:8080/actuator/health```
 
+Swagger end point:
+
+``` http://localhost:8080/swagger-ui/index.html```
+
 ## Notes
 - Cache eviction is scheduled every 10 minutes to clear stale Redis data.
 - All exceptions are handled via a global exception handler.
